@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for simplicity (not recommended for production)
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // Disable frame options for H2 console
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll() // Allow H2 console access
+                        .requestMatchers("/h2-console/**", "/login").permitAll()
                         .anyRequest().authenticated()) // All requests require authentication
                 .httpBasic(Customizer.withDefaults()) // Use HTTP Basic authentication
                 .build();
