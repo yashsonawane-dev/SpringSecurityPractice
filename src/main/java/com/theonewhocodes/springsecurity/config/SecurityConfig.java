@@ -1,10 +1,12 @@
 package com.theonewhocodes.springsecurity.config;
 
+import com.theonewhocodes.springsecurity.dto.Permissions;
 import com.theonewhocodes.springsecurity.filters.JWTAuthFilter;
 import com.theonewhocodes.springsecurity.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,6 +33,9 @@ public class SecurityConfig {
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // Disable frame options for H2 console
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/weather/**").hasAuthority(Permissions.WEATHER_READ.name())
+                        .requestMatchers(HttpMethod.POST, "/api/weather/**").hasAuthority(Permissions.WEATHER_WRITE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/weather/**").hasAuthority(Permissions.WEATHER_DELETE.name())
                         .anyRequest().authenticated()) // All requests require authentication
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

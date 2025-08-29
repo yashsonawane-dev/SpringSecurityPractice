@@ -1,5 +1,6 @@
 package com.theonewhocodes.springsecurity.service;
 
+import com.theonewhocodes.springsecurity.dto.Role;
 import com.theonewhocodes.springsecurity.entity.Users;
 import com.theonewhocodes.springsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,26 @@ public class AdminInitializer {
     @Bean
     public CommandLineRunner commandLineRunner(PasswordEncoder passwordEncoder) {
         return args -> {
-            Users users = new Users();
-            users.setUsername("admin");
-            users.setPassword(passwordEncoder.encode("admin123"));
-            users.setRole("ROLE_ADMIN");
-            if (userRepository.findByUsername(users.getUsername()).isEmpty()) {
-                userRepository.save(users);
-                System.out.println("Admin user created with username: " + users.getUsername());
+            Users admin = new Users();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setRole(Role.ADMIN);
+            if (userRepository.findByUsername(admin.getUsername()).isEmpty()) {
+                userRepository.save(admin);
+                System.out.println("Admin user created with username: " + admin.getUsername());
             } else {
-                System.out.println("Admin user already exists with username: " + users.getUsername());
+                System.out.println("Admin user already exists with username: " + admin.getUsername());
+            }
+
+            Users user = new Users();
+            user.setUsername("user");
+            user.setPassword(passwordEncoder.encode("user123"));
+            user.setRole(Role.USER);
+            if (userRepository.findByUsername(user.getUsername()).isEmpty()) {
+                userRepository.save(user);
+                System.out.println("User user created with username: " + user.getUsername());
+            } else {
+                System.out.println("User user already exists with username: " + user.getUsername());
             }
         };
     }
